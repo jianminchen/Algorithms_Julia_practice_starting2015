@@ -1,0 +1,92 @@
+﻿  /*
+         * Func spec: 
+         * formula like this:
+         * h(n) = 1 * h(n-1) + 2 h(n-2) + 3 h(n-3)
+         * h(n) is determined by h(n-1) + 3*h(n-3), even or odd
+         * if both of odd,  then, h(n) is even; 
+         * if both of even, then, h(n) is even; 
+         * if only one is even, then, h(n) is odd
+         * 
+         * true - even, false - odd
+         * 
+         * (2000 * 2000)^2 = 16 * 10^12, if it is boolean array, then the size is
+         * 2*10^6 MB = 2GB
+         * 
+         * this array cannot handle the big amount of data: hacknoacci[2000]
+         */
+        [Obsolete]
+        private static void CalculateHackonacci()
+        {
+            hacknoacci[1] = false;
+            hacknoacci[2] = true;
+            hacknoacci[3] = false;
+
+            for (int i = 4; i <= 2000; i++)
+            {
+                bool first = hacknoacci[i - 1];
+                bool second = hacknoacci[i - 3];
+                if (first == second)
+                    hacknoacci[i] = true;
+                else
+                    hacknoacci[i] = false;
+            }
+        }
+
+        /*
+         * Timeout issue: 
+         * use memorization 
+         * get largest one always, start from there. 
+         * 
+         * Check Dictionary hackHistory, and then, start from largest one. 
+         */
+        [Obsolete]
+        private static bool CalculateHackonacciMemoStartLargest(long n)
+        {
+            bool[] hackData = new bool[] { false, true, false };
+            if (n < 1)
+                return false;
+            if (n <= 3)
+                return hackData[n - 1];
+
+            bool current = true;
+            int start = 4;           
+
+            for (int i = start; i <= n; i++)
+            {
+                if (hackData[0] == hackData[2])
+                    current = true;
+                else
+                    current = false;
+
+                // set for next iteration
+                hackData[0] = hackData[1];
+                hackData[1] = hackData[2];
+                hackData[2] = current;
+            }
+
+            HackerNode node = new HackerNode(hackData[2], hackData[1], hackData[0], hackData[2]);
+            hackHistory.Add(n, node); 
+
+            return current;
+        }
+
+
+		/*
+         * Rotate matrix clockwise 90, 180, 270 degrees - 3 choices
+         */
+        private static void RotateClockwiseN90(char[,] matrix, int rows, int angle)
+        {
+            int rotateDegree = angle % 360;
+            int[] choices = new int[] { 0, 90, 180, 270 };
+
+            if (angle == choices[0])
+                return;
+            if (angle == choices[1])
+                RotateClockwise90(matrix, rows);
+            if (angle == choices[2])
+                RotateClockWise180(matrix, rows);
+            if (angle == choices[3])
+                RotateClockwise270(matrix, rows);
+        }
+
+
